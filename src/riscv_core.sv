@@ -35,7 +35,9 @@ module riscv_core(
     wire [1:0] rd_data_sel, lsu_data_width;
     wire a_sel, b_sel, br_base_sel, br_taken, regfile_we, lsu_we, lsu_sign_extend, invalid_instruction, clk;
     
+    // clock_generator is an IP clock wizard source from Vivado. You may want to replace this with a manual "always #1 clk = ~clk;" in the testbench for simulation outside of Vivado.
     clock_generator clock_generator(.clk_100MHz_i(clk_i), .clk_200MHz_o(clk));
+    
     decoder decoder(.inst_i(inst), .imm_sel_i(imm_sel), .imm_o(imm), .rs1_o(rs1), .rs2_o(rs2), .rd_o(rd), .opcode_o(opcode), .funct7_o(funct7), .funct3_o(funct3));
     control_unit control_unit(.opcode_i(opcode), .funct7_i(funct7), .funct3_i(funct3), .control_field_i(control_field), .microcode_addr_o(microcode_read_addr), .alu_a_sel_o(a_sel), .alu_b_sel_o(b_sel), .alu_op_o(alu_op), .br_base_sel_o(br_base_sel), .br_cond_o(br_cond), .regfile_we_o(regfile_we), .rd_data_sel_o(rd_data_sel), .lsu_we_o(lsu_we), .lsu_sign_extend_o(lsu_sign_extend), .lsu_datawidth_o(lsu_data_width), .imm_sel_o(imm_sel), .invalid_instruction_o(invalid_instruction));
     microcode_memory microcode_memory(.clk_i(clk), .we_i(microcode_we_i), .read_addr_i(microcode_read_addr), .write_addr_i(microcode_write_addr_i), .write_data_i(microcode_write_data_i), .read_data_o(control_field)); // good
